@@ -6,8 +6,7 @@ title: TUI
 <div class="hero is-dark">
   <div class="hero-body">
     <div class="container">
-      <p class="title is-2">TUI</p>
-      <p class="subtitle is-5">Guarda aquí el código de barras de tu TUI</p>
+      <p class="title is-2">TUI digital</p>
     </div>
   </div>
 </div>
@@ -40,11 +39,26 @@ title: TUI
     </form>
 
     <br>
-    <h4 class="title is-4">Subir una foto de la tarjeta</h4>
+    <h4 class="title is-4">Foto de la tarjeta</h4>
 
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <figure class="image">
+          <div id="res">
+            <a id="tui_load" class="button is-loading is-fullwidth is-hidden" href="javascript:;" disabled></a> 
+          </div>
+          <img src="" id="tui-pic" />
+        </figure>
+      </div>
+    </div>
+    <div class="content">
+      <p>
+        Sube aquí una imagen de tu TUI para mostrar. Sólo se almacena en tu móvil.
+      </p>
+    </div>
     <form class="form">
       <!-- Upload -->
-      <div class=" field file has-name is-fullwidth">
+      <div class="field file has-name is-fullwidth">
       	<label class="file-label">
       	  <input class="file-input" type="file" id="upload_tui" name="resume">
       	  <span class="file-cta">
@@ -52,31 +66,23 @@ title: TUI
                     <i class="fa fa-upload"></i>
       	    </span>
       	    <span class="file-label">
-                    Choose a file…
+                    Sube un archivo
       	    </span>
       	  </span>
-      	  <span class="file-name">
-      	    Screen Shot 2017-07-29 at 15.54.25.png
+      	  <span class="file-name" id="file_name">
+            (Ningún archivo seleccionado)
       	  </span>
       	</label>
       </div>
 
       <div class="field">
         <p class="control">
-          <input type="button" class="button is-danger" id="delete_image" value="Eliminar Foto">
+          <input type="button" class="button is-danger" id="delete_image" value="Eliminar foto">
         </p>
       </div>
     </form>
 
     <br>
-    <div class="columns is-centered">
-      <div class="column is-half">
-        <div id="res"></div>
-        <img src="" id="tui-pic" />
-      </div>
-    </div>
-
-
   </div>
 </section>
 
@@ -107,11 +113,14 @@ title: TUI
   var upload =  document.getElementById('upload_tui');
   var res = document.getElementById("res");
   var img = document.getElementById("tui-pic");
+  var tui_load = document.getElementById("tui_load");
 
   upload.addEventListener("change", function(e) {
+    tui_load.classList.remove("is-hidden");
 
     var file = this.files[0];
-    var maxSize = 5000000; //5Mb
+    document.querySelector("#file_name").textContent = file.name;
+    var maxSize = 6000000; //6Mb
 
     if (file.type.indexOf('image') < 0){
       res.innerHTML = "Formato no valido";
@@ -124,7 +133,7 @@ title: TUI
           }catch(e){
             var msg = e.message.toLowerCase();
 
-            if(msg.indexOf('storage') >- 1 || msg.indexOf('quota') > -1)  {
+            if(msg.indexOf('storage') > -1 || msg.indexOf('quota') > -1)  {
               if(file.type.match(/jpe?g/)){
                 console.log("Reduciendo calidad");
                 localStorage.setItem("imgTUI", getBase64Image(img, (file.size/maxSize), file.type, 0.7));
@@ -142,6 +151,8 @@ title: TUI
       }
       fReader.readAsDataURL(file);
     }
+    
+    tui_load.classList.add("is-hidden");
   });
 
   //Función que encontré alguna vez en stackoverflow. No tengo la referencia :(
